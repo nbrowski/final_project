@@ -13,10 +13,10 @@ require 'mechanize'
 
   @agent.submit(login_form)
 
-#check page title to see that log in worked
+#check page title to see that log in worked.  Should say "Fantasy Football - Free ..."
 puts @agent.page.title
 
-#look at cookies.  See that espnAuth and SWID are there
+#Look at cookies.  See that espnAuth and SWID are there.
 puts @agent.cookies
 
 #Now go to the league page
@@ -24,6 +24,7 @@ puts @agent.cookies
 league_page=@agent.page.links_with(href: /leagueId/).first.href
 
 #Look at link.  It should be "http://games.espn.go.com/ffl/clubhouse?leagueId=11584&teamId=2&seasonId=2015"
+
 puts league_page
 
 @agent.get(league_page)
@@ -32,7 +33,7 @@ puts league_page
 
 puts @agent.page.title
 
-#look to see that cookies are still there
+#Look to see that cookies are still there.  Should rule out cookie problem.
 puts @agent.cookies
 
 
