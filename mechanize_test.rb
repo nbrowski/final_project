@@ -17,13 +17,6 @@ require 'mechanize'
 puts @agent.page.title
 puts @agent.cookies
 
-#add Cookie
-
-#cookie = Mechanize::Cookie.new :domain => '.go.com', :name => 'espnAuth', :value => {"swid":"{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}"}, :path => '/', :expires => (Date.today + 1).to_s
-#@agent.cookie_jar << cookie
-
-#cookie2 = Mechanize::Cookie.new :domain => '.go.com', :name => 'SWID', :value => {DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}, :path => '/', :expires => (Date.today + 1).to_s
-#@agent.cookie_jar << cookie2
 
 #now go to the league page
 
