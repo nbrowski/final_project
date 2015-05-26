@@ -27,6 +27,10 @@ league_page=@agent.page.links_with(href: /leagueId/).first.href
 
 puts league_page
 
+#MODIFY espnAuth Cookie Value to include quotations in hash
+
+@agent.cookies[2].value="{'swid':'{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}'}"
+
 @agent.get(league_page)
 
 #Check page title to see that click worked - It should NOT say "Sign In" but rather "Team Bar - Free Fantasy Football - ESPN"
