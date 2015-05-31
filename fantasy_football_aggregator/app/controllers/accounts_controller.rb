@@ -16,7 +16,7 @@ class AccountsController < ApplicationController
     @account.platform = params[:platform]
     @account.password = params[:password]
     @account.user_name = params[:user_name]
-    @account.user_id = params[:user_id]
+    @account.user_id = current_user.id
 
     if @account.save
       redirect_to "/accounts", :notice => "Account created successfully."
@@ -35,7 +35,7 @@ class AccountsController < ApplicationController
     @account.platform = params[:platform]
     @account.password = params[:password]
     @account.user_name = params[:user_name]
-    @account.user_id = params[:user_id]
+    @account.user_id = current_user.id
 
     if @account.save
       redirect_to "/accounts", :notice => "Account updated successfully."

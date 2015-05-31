@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+
+  devise_for :users
+root 'accounts#new'
+  # Routes for Player Search
+
+
+
   # Routes for the Account resource:
   # CREATE
   get "/accounts/new", :controller => "accounts", :action => "new"
@@ -15,6 +22,8 @@ Rails.application.routes.draw do
   # DELETE
   get "/delete_account/:id", :controller => "accounts", :action => "destroy"
   #------------------------------
+
+
 
   # Routes for the League resource:
   # CREATE
