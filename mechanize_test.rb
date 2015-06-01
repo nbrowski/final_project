@@ -21,7 +21,8 @@ puts @agent.cookies
 
 #MODIFY espnAuth Cookie Value to include quotations in hash
 
-@agent.cookies[2].value="{'swid':'{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}'}"
+@agent.cookies[2].value="{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}"
+@agent.cookies[3].value="{'swid':'{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}'}"
 
 #Now go to the league page
 
@@ -38,5 +39,9 @@ puts league_page
 #Check page title to see that click worked - It should NOT say "Sign In" but rather "Team Bar - Free Fantasy Football - ESPN"
 
 puts @agent.page.title
+
+html=@agent.page.body
+
+doc=Nokogiri::HTML(html)
 
 
