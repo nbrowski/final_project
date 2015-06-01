@@ -5,10 +5,14 @@ class SearchController < ApplicationController
  end
 
  def search
+  #Create Array of Hashes to hold the results from each account
+  resultsAll=Array.new
 
   current_user.accounts.each do |account|
     #Future versions, include logic for non-ESPN platforms
+
     if account.platform == "ESPN"
+
       #Sign in to ESPN fantasy football with Mechanize
 
       @espnAgent=Mechanize.new
@@ -24,15 +28,20 @@ class SearchController < ApplicationController
 
       #Player search for each league
       account.leagues.each do |league|
-        @espnAgent.get("http://games.espn.go.com/ffl/freeagency?leagueId=#{league.league_number}&teamId=#{league.team_number}&seasonId=#{Date.today.year}")
-        espnSearch=@espnAgent.page.forms.first
-        espnSearch.search=arams[:lastNameInput]
-        espnSearch.submit
+
+      #Create Hash with Account_ID, League_ID, and results
+      resultsHash=Hash.new
+      resultsHash{:account_id => account_id, :league_id => league_id, :resultsPlayers => [], :resultsAvail => []}
+
+      #Go to search page
+      @espnAgent.get("http://games.espn.go.com/ffl/freeagency?leagueId=#{league.league_number}&teamId=#{league.team_number}&seasonId=#{Date.today.year}")
+      espnSearch=@espnAgent.page.forms.first
+      espnSearch.search=arams[:lastNameInput]
+      espnSearch.submit
 
         #Put results page into Nokogiri object for parsing
         espnDoc=Nokogiri::HTML(@espnAgent.page.body)
         #Put player names, teams, positions from search results table into array
-        espn.league_Id
         espnDoc.css("td[class='playertablePlayerName']").each do |td|
           td.text
         end
