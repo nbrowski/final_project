@@ -6,7 +6,7 @@ class SearchController < ApplicationController
 
  def search
   #Create Array of Hashes to hold the results from each account
-  resultsAll=Array.new
+  @resultsAll=Array.new
 
   current_user.accounts.each do |account|
     #Future versions, include logic for non-ESPN platforms
@@ -30,8 +30,6 @@ class SearchController < ApplicationController
       account.leagues.each do |league|
 
       #Create Hash with Account_ID, League_ID, and results
-      resultsHash=Hash.new
-      resultsHash{:account_id => account_id, :league_id => league_id, :resultsPlayers => [], :resultsAvail => []}
 
       #Go to search page
       @espnAgent.get("http://games.espn.go.com/ffl/freeagency?leagueId=#{league.league_number}&teamId=#{league.team_number}&seasonId=#{Date.today.year}")
@@ -41,14 +39,30 @@ class SearchController < ApplicationController
 
         #Put results page into Nokogiri object for parsing
         espnDoc=Nokogiri::HTML(@espnAgent.page.body)
+
         #Put player names, teams, positions from search results table into array
-        espnDoc.css("td[class='playertablePlayerName']").each do |td|
-          td.text
+        resultsPlayers=Array.new
+
+        espnDoc.css("td[class='playertablePlayerName']").each
+        do |td|
+          resultsPlayers.push td.text
         end
+
+        resultsAvail=Array.new
+        #a=doc.css("tr").select{|tr| tr[:class].to_s.include? "pncPlayerRow"}
+        #a[0].css("td")[2].text, this works
+        #but this doesn't work in terminal: a.each{|a| a.css("td")[2].text}
+        resultsHash=Hash.new
+
+        @resultsHash={:platform => platform, :leagueName => name, :resultsPlayers => resultsPlayers :resultsAvail => resultsAvail :n => resultsAvail.count}
+
+        @resultsAll.push resultsHash
 
       end
 
     end
+
+    #this is where non-ESPN leagues would go
 
   end
 
@@ -56,3 +70,4 @@ class SearchController < ApplicationController
 end
 
 end
+
