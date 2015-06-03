@@ -14,17 +14,39 @@ class SearchController < ApplicationController
     if account.platform == "ESPN"
 
       #Sign in to ESPN fantasy football with Mechanize
-
+      #Find a way to avoid repeating the sign in everytime the search is invoked.
       @espnAgent=Mechanize.new
       @espnAgent.get("http://games.espn.go.com/ffl/signin")
       espnLogin=@espnAgent.page.forms.first
+      #pp espnLogin
       espnLogin.username=account.user_name
-      login_form.password=account.password
-      @espnAgent.submit(login_form)
+      espnLogin.password=account.password
+      @espnAgent.submit(espnLogin)
 
       #Need to verify cookie values by reading cookies array and string parsing.  These are the proper values for the dsgn425 ESPN account
-      #@agent.cookies[2].value="{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}"
-      #@agent.cookies[3].value="{'swid':'{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}'}"
+      #@espnAgent.cookies[2].value="{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}"
+      #@espnAgent.cookies[3].value="{'swid':'{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}'}"
+      #Automatically identify the espnAuth cookie and reformat value to include quotes
+      i=0
+      cookieParts=Array.new
+      while i<@espnAgent.cookies.count
+        if @espnAgent.cookies[i].name=="espnAuth"
+          cookieParts=@espnAgent.cookies[i].value.chomp("}}").split("{")
+          newValue="{'swid':'{#{cookieParts[2]}}'}"
+          @espnAgent.cookies[i].value=newValue
+          break
+        end
+        i=i+1
+      end
+      #Automatically identify SWID cookie and assign proper value from espnAuth
+      j=0
+      while j<@espnAgent.cookies.count
+        if @espnAgent.cookies[j].name=="SWID"
+          @espnAgent.cookies[j].value="{#{cookieParts[2]}}"
+          break
+        end
+        j=j+1
+      end
 
       #Player search for each league
       account.leagues.each do |league|
@@ -32,9 +54,14 @@ class SearchController < ApplicationController
       #Create Hash with Account_ID, League_ID, and results
 
       #Go to search page
+      #pp @espnAgent.cookies
       @espnAgent.get("http://games.espn.go.com/ffl/freeagency?leagueId=#{league.league_number}&teamId=#{league.team_number}&seasonId=#{Date.today.year}")
+      #pp "http://games.espn.go.com/ffl/freeagency?leagueId=#{league.league_number}&teamId=#{league.team_number}&seasonId=#{Date.today.year}"
       espnSearch=@espnAgent.page.forms.first
-      espnSearch.search=arams[:lastNameInput]
+      #pp espnSearch
+      espnSearch.search=params[:lastNameInput]
+      #pp params[:lastNameInput]
+      #pp espnSearch.search
       espnSearch.submit
 
         #Put results page into Nokogiri object for parsing
@@ -43,18 +70,23 @@ class SearchController < ApplicationController
         #Put player names, teams, positions from search results table into array
         resultsPlayers=Array.new
 
-        espnDoc.css("td[class='playertablePlayerName']").each
-        do |td|
+        espnDoc.css("td[class='playertablePlayerName']").each do |td|
           resultsPlayers.push td.text
         end
 
+        #Put the availabilities into an array
         resultsAvail=Array.new
-        #a=doc.css("tr").select{|tr| tr[:class].to_s.include? "pncPlayerRow"}
-        #a[0].css("td")[2].text, this works
-        #but this doesn't work in terminal: a.each{|a| a.css("td")[2].text}
-        resultsHash=Hash.new
+        a=espnDoc.css("tr").select{|tr| tr[:class].to_s.include? "pncPlayerRow"} #this gets rows from espn results table
+        #ideally do something like a.select{|a| a.css("td")[2].text} but it won't work in terminal.  Do loop instead. a[0].css("td")[2].text works
+        i=0
+        while i<a.count
+          resultsAvail.push a[i].css("td")[2].text
+          i=i+1
+        end
 
-        @resultsHash={:platform => platform, :leagueName => name, :resultsPlayers => resultsPlayers :resultsAvail => resultsAvail :n => resultsAvail.count}
+        #put all results into a hash to then push into the @resultsAll array
+        resultsHash=Hash.new
+        resultsHash={:platform => league.account.platform, :leagueName => league.name, :resultsPlayers => resultsPlayers, :resultsAvail => resultsAvail, :n => resultsAvail.count}
 
         @resultsAll.push resultsHash
 
