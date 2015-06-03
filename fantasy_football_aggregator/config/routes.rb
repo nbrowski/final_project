@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
   devise_for :users
-root 'accounts#new'
+  root 'search#index'
   # Routes for Player Search
   get "/search", :controller => "search", :action => "index"
   get "/search/results", :controller => "search", :action => "search"

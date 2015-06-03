@@ -1,5 +1,12 @@
 class SearchController < ApplicationController
 
+  before_action :check_for_league
+  def check_for_league
+    if current_user.accounts.count==0
+      redirect_to "/accounts"
+    end
+  end
+
   def index
    render 'index'
  end
