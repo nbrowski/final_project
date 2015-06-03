@@ -15,7 +15,7 @@
     <td width="20">Platform   </td>
     <td width="30">League     </td>
     <td width="300">Player     </td>
-    <td width="20">Owner      </td>
+    <td width="40">Owner      </td>
   </tr>
   <% @resultsAll.each do |league| %>
   <% @i=0  %>
@@ -24,7 +24,7 @@
     <td><%= league[:platform] %>       </td>
     <td><%= league[:leagueName] %>     </td>
     <td><%= league[:resultsPlayers][@i] %>   </td>
-    <td><%= league[:resultsAvail][@i] %></td>
+    <td><%= league[:resultsAvail][@i] %>  </td>
   </tr>
   <% @i=@i+1 %>
   <% end %>

@@ -9,43 +9,67 @@ class SearchController < ApplicationController
   @resultsAll=Array.new
 
   current_user.accounts.each do |account|
-    #Future versions, include logic for non-ESPN platforms
+    #Future versions: include logic for non-ESPN platforms.  Might need to use one agent for all platforms in order to be able to save the cookies across sessions.
 
     if account.platform == "ESPN"
 
       #Sign in to ESPN fantasy football with Mechanize
-      #Find a way to avoid repeating the sign in everytime the search is invoked.
       @espnAgent=Mechanize.new
-      @espnAgent.get("http://games.espn.go.com/ffl/signin")
-      espnLogin=@espnAgent.page.forms.first
-      #pp espnLogin
-      espnLogin.username=account.user_name
-      espnLogin.password=account.password
-      @espnAgent.submit(espnLogin)
 
-      #Need to verify cookie values by reading cookies array and string parsing.  These are the proper values for the dsgn425 ESPN account
-      #@espnAgent.cookies[2].value="{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}"
-      #@espnAgent.cookies[3].value="{'swid':'{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}'}"
-      #Automatically identify the espnAuth cookie and reformat value to include quotes
-      i=0
-      cookieParts=Array.new
-      while i<@espnAgent.cookies.count
-        if @espnAgent.cookies[i].name=="espnAuth"
-          cookieParts=@espnAgent.cookies[i].value.chomp("}}").split("{")
-          newValue="{'swid':'{#{cookieParts[2]}}'}"
-          @espnAgent.cookies[i].value=newValue
-          break
+      #Skip sign in if already signed in previously in the session. ie if cookies are present
+      cookies = session[:login_cookies]
+
+      #for testing
+        #puts cookies
+
+      if cookies=="" or cookies==nil then
+        #for testing
+          #puts "***COOKIES ARE EMPTY***"
+        @espnAgent.get("http://games.espn.go.com/ffl/signin")
+        espnLogin=@espnAgent.page.forms.first
+        espnLogin.username=account.user_name
+        espnLogin.password=account.password
+        @espnAgent.submit(espnLogin)
+
+        #Need to verify cookie values by reading cookies array and string parsing.  These are the proper values for the dsgn425 ESPN account
+        #@espnAgent.cookies[2].value="{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}"
+        #@espnAgent.cookies[3].value="{'swid':'{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}'}"
+
+        #Automatically identify the espnAuth cookie and reformat value to include quotes
+        i=0
+        cookieParts=Array.new
+        while i<@espnAgent.cookies.count
+          if @espnAgent.cookies[i].name=="espnAuth"
+            cookieParts=@espnAgent.cookies[i].value.chomp("}}").split("{")
+            newValue="{'swid':'{#{cookieParts[2]}}'}"
+            @espnAgent.cookies[i].value=newValue
+            break
+          end
+          i=i+1
         end
-        i=i+1
-      end
-      #Automatically identify SWID cookie and assign proper value from espnAuth
-      j=0
-      while j<@espnAgent.cookies.count
-        if @espnAgent.cookies[j].name=="SWID"
-          @espnAgent.cookies[j].value="{#{cookieParts[2]}}"
-          break
+        #Automatically identify SWID cookie and assign proper value from espnAuth
+        j=0
+        while j<@espnAgent.cookies.count
+          if @espnAgent.cookies[j].name=="SWID"
+            @espnAgent.cookies[j].value="{#{cookieParts[2]}}"
+            break
+          end
+          j=j+1
         end
-        j=j+1
+
+        #This will save the cookies across controller requests. But how can I distinguish cookies from multiple agents? Possible by using :espn_cookies rather than :login_cookies in session?
+        stringio = StringIO.new
+        @espnAgent.cookie_jar.save(stringio, session: true)
+        cookies = stringio.string
+        puts cookies
+        session[:login_cookies] = cookies
+      else
+        #for testing
+          #puts "***COOKIES ARE LOADED FROM SAVED***"
+          #pp cookies
+          #cookies = session[:login_cookies]
+          #pp cookies
+          @espnAgent.cookie_jar.load StringIO.new(cookies)
       end
 
       #Player search for each league
@@ -54,9 +78,9 @@ class SearchController < ApplicationController
       #Create Hash with Account_ID, League_ID, and results
 
       #Go to search page
-      #pp @espnAgent.cookies
       @espnAgent.get("http://games.espn.go.com/ffl/freeagency?leagueId=#{league.league_number}&teamId=#{league.team_number}&seasonId=#{Date.today.year}")
-      #pp "http://games.espn.go.com/ffl/freeagency?leagueId=#{league.league_number}&teamId=#{league.team_number}&seasonId=#{Date.today.year}"
+      pp "http://games.espn.go.com/ffl/freeagency?leagueId=#{league.league_number}&teamId=#{league.team_number}&seasonId=#{Date.today.year}"
+      pp @espnAgent.cookies
       espnSearch=@espnAgent.page.forms.first
       #pp espnSearch
       espnSearch.search=params[:lastNameInput]
