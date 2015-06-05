@@ -4,7 +4,7 @@ class AccountsController < ApplicationController
   def check_if_owner
     account=Account.find(params[:id])
     if account.user_id != current_user.id
-      redirect_to "/accounts", alert: "You do not have permission to access that account"
+      redirect_to "/accounts", alert: "You do not have permission to access that account."
     end
   end
 

@@ -6,4 +6,5 @@ class League < ActiveRecord::Base
   validates :team_number, :presence => true
 
   belongs_to :account
+
 end

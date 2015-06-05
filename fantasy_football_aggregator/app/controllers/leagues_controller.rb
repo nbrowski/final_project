@@ -1,6 +1,16 @@
 class LeaguesController < ApplicationController
+  before_action :check_if_owner, only: [:edit, :update, :destroy, :show]
+
+  def check_if_owner
+    league=League.find(params[:id])
+    if league.account.user_id != current_user.id
+      redirect_to "/leagues", alert: "You do not have permission to access that league."
+    end
+  end
+
+
   def index
-    @leagues = League.all
+    @leagues = current_user.leagues
   end
 
   def show
