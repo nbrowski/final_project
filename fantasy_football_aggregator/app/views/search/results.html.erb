@@ -29,7 +29,7 @@
     <td><%= league[:leagueName] %>     </td>
     <td><%= league[:resultsPlayers][@i] %>   </td>
     <td><%= league[:resultsAvail][@i] %>  </td>
-    <td><a href="<%= league[:resultsLinks][@i] %>" target="tab">ADD LOGIC FOR LINK TEXT</a></td>
+    <td><a href="<%= league[:resultsLinks][@i] %>" target="_blank"><%= league[:resultsLinkActions][@i] %></a></td>
 
   </tr>
   <% @i=@i+1 %>

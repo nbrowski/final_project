@@ -49,10 +49,45 @@ class AccountsController < ApplicationController
       redirect_to "/accounts", :alert => "Wrong username or password"
     elsif @account.save
       #If verification successful then auto-add the leagues associated with that account
-        #get the unique league pages
+      #These are all of the league homepage links for the current season
+      league_links=page.links_with(class: "leagueoffice-link", href: /seasonId=#{Date.today.year}/)
+      #For each, pull out from the LeagueID and TeamID from url and League Name from link title.  Use to make a new League.
+      pp league_links
+
+      league_links.each do |link|
+
+        pp "title: " + link.attributes[:title]
+        pp "league num " + link.attributes[:href].split("=")[1].split("&")[0]
+        pp "team num " + link.attributes[:href].split("=")[2].split("&")[0]
+
+        @league = League.new
+        @league.name=link.attributes[:title]
+        @league.league_number=link.attributes[:href].split("=")[1].split("&")[0].to_i
+        @league.team_number=link.attributes[:href].split("=")[2].split("&")[0].to_i
+        @league.account_id=@account.id
+        @league.save
+        # if @league.save
+        #   pp "League created"
+        # else
+        #   pp "League not created"
+        #   pp @league.errors.full_messages.each {|message| puts message}
+        # end
+
+      end
+        #get the unique league pages to add to notification
+        string=""
+        @account.leagues.each do |a|
+          string=string+a.name+", "
+        end
+        string=string.chomp(", ")
+
+        # pp @account
+        # pp @account.leagues
+        # pp string
+        # pp League.find_by(:account_id => @account.id)
 
       #league_pages=@agent.page.links_with(href: /leagueoffice/)
-      redirect_to "/accounts", :notice => "Account created successfully."
+      redirect_to "/accounts", :notice => "Account created successfully. Leagues added: #{string}"
     else
       render 'new'
     end
@@ -102,6 +137,6 @@ class AccountsController < ApplicationController
 
     @account.destroy
 
-    redirect_to "/accounts", :notice => "Account deleted."
+    redirect_to "/accounts", :notice => "Account and associated leagues deleted."
   end
 end

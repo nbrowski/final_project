@@ -20,12 +20,12 @@
   <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 isotope-item">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title">League #<%= league.id %></h3>
+        <h3 class="panel-title"><%= league.name %></h3>
       </div>
       <div class="panel-body">
         <dl>
           <dt>Account</dt>
-          <dd><%= league.account.platform %></dd>
+          <dd><a href="/accounts/<%= league.account.id %>"><%= league.account.platform %></a></dd>
 
           <dt>League Name</dt>
           <dd><%= league.name %></dd>

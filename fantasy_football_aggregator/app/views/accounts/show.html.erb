@@ -4,7 +4,7 @@
   <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title">Account #<%= @account.id %></h3>
+        <h3 class="panel-title">View <%= @account.platform %> account</h3>
       </div>
       <div class="panel-body">
         <div class="row">
@@ -16,6 +16,11 @@
 
               <dt>User name</dt>
               <dd><%= @account.user_name %></dd>
+              <dt>Leagues</dt>
+              <% @account.leagues.each do |league| %>
+              <dd> <a href="/leagues/<%= league.id %>"><%= league.name %></a></dd>
+
+              <% end %>
 
             </dl>
             <div class="btn-group btn-group-justified">

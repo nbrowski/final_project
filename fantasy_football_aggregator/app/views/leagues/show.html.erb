@@ -4,43 +4,43 @@
   <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title">League #<%= @league.id %></h3>
+        <h3 class="panel-title">View <%= @league.name %> league</h3>
       </div>
       <div class="panel-body">
         <div class="row">
           <div class="col-md-12">
             <dl class="dl-horizontal">
              <dt>Account</dt>
-              <dd><%= @league.account.platform %></dd>
+             <dd><a href="/accounts/<%= @league.account.id %>"><%= @league.account.platform %></a></dd>
 
-              <dt>League Name</dt>
-              <dd><%= @league.name %></dd>
+             <dt>League Name</dt>
+             <dd><%= @league.name %></dd>
 
-              <dt>Team number</dt>
-              <dd><%= @league.team_number %></dd>
+             <dt>Team number</dt>
+             <dd><%= @league.team_number %></dd>
 
-              <dt>League number</dt>
-              <dd><%= @league.league_number %></dd>
+             <dt>League number</dt>
+             <dd><%= @league.league_number %></dd>
 
-            </dl>
-            <div class="btn-group btn-group-justified">
-              <a href="/leagues" class="btn btn-primary">
-                <i class="fa fa-chevron-left"></i>
-              </a>
+           </dl>
+           <div class="btn-group btn-group-justified">
+            <a href="/leagues" class="btn btn-primary">
+              <i class="fa fa-chevron-left"></i>
+            </a>
 
-              <a href="/leagues/<%= @league.id %>/edit" class="btn btn-warning">
-                <i class="fa fa-edit"></i>
-              </a>
+            <a href="/leagues/<%= @league.id %>/edit" class="btn btn-warning">
+              <i class="fa fa-edit"></i>
+            </a>
 
-              <a href="/delete_league/<%= @league.id %>" class="btn btn-danger" rel="nofollow">
-                <i class="fa fa-trash-o"></i>
-              </a>
-            </div>
+            <a href="/delete_league/<%= @league.id %>" class="btn btn-danger" rel="nofollow">
+              <i class="fa fa-trash-o"></i>
+            </a>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 
 <!-- End responsive panel example -->

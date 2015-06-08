@@ -109,6 +109,7 @@ class SearchController < ApplicationController
         #Put the availabilities and add/trade/drop links into an array
         resultsAvail=Array.new
         resultsLinks=Array.new
+        resultsLinkActions=Array.new
         a=espnDoc.css("tr").select{|tr| tr[:class].to_s.include? "pncPlayerRow"} #this gets rows from espn results table
         #ideally do something like a.select{|a| a.css("td")[2].text} but it won't work in terminal.  Do loop instead. a[0].css("td")[2].text works
         i=0
@@ -120,13 +121,14 @@ class SearchController < ApplicationController
           linkpath=a[i].css("td")[3].css("a")[0].attributes["href"].value.split("'")[1]
           linkurl="http://games.espn.go.com"+linkpath
           resultsLinks.push linkurl
-
+          linkAction=a[i].css("td")[3].css("a")[0].attributes["title"].value
+          resultsLinkActions.push linkAction
           i=i+1
         end
 
         #put all results into a hash to then push into the @resultsAll array
         resultsHash=Hash.new
-        resultsHash={:platform => league.account.platform, :leagueName => league.name, :resultsPlayers => resultsPlayers, :resultsAvail => resultsAvail, :resultsLinks => resultsLinks, :n => resultsAvail.count}
+        resultsHash={:platform => league.account.platform, :leagueName => league.name, :resultsPlayers => resultsPlayers, :resultsAvail => resultsAvail, :resultsLinks => resultsLinks, :resultsLinkActions => resultsLinkActions, :n => resultsAvail.count}
 
         @resultsAll.push resultsHash
 
