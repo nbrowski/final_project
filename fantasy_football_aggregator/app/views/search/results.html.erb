@@ -14,10 +14,12 @@
 
 <table>
   <tr>
-    <td width="20">Platform   </td>
+    <td width="30">Platform   </td>
     <td width="30">League     </td>
     <td width="300">Player     </td>
     <td width="40">Owner      </td>
+    <td width="40">Action      </td>
+
   </tr>
   <% @resultsAll.each do |league| %>
   <% @i=0  %>
@@ -27,6 +29,8 @@
     <td><%= league[:leagueName] %>     </td>
     <td><%= league[:resultsPlayers][@i] %>   </td>
     <td><%= league[:resultsAvail][@i] %>  </td>
+    <td><a href="<%= league[:resultsLinks][@i] %>" target="tab">ADD LOGIC FOR LINK TEXT</a></td>
+
   </tr>
   <% @i=@i+1 %>
   <% end %>

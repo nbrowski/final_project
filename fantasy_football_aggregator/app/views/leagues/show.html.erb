@@ -10,17 +10,17 @@
         <div class="row">
           <div class="col-md-12">
             <dl class="dl-horizontal">
+             <dt>Account</dt>
+              <dd><%= @league.account.platform %></dd>
+
+              <dt>League Name</dt>
+              <dd><%= @league.name %></dd>
+
               <dt>Team number</dt>
               <dd><%= @league.team_number %></dd>
 
-              <dt>Name</dt>
-              <dd><%= @league.name %></dd>
-
               <dt>League number</dt>
               <dd><%= @league.league_number %></dd>
-
-              <dt>Account</dt>
-              <dd><%= @league.account_id %></dd>
 
             </dl>
             <div class="btn-group btn-group-justified">

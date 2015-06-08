@@ -16,7 +16,7 @@
 <hr>
 
 <div class="row isotope-container">
-<% @leagues.each do |league| %>
+  <% @leagues.each do |league| %>
   <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 isotope-item">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -24,18 +24,14 @@
       </div>
       <div class="panel-body">
         <dl>
-          <dt>Team number</dt>
-          <dd><%= league.team_number %></dd>
+          <dt>Account</dt>
+          <dd><%= league.account.platform %></dd>
 
-          <dt>Name</dt>
+          <dt>League Name</dt>
           <dd><%= league.name %></dd>
 
-          <dt>League number</dt>
-          <dd><%= league.league_number %></dd>
-
-          <dt>Account</dt>
-          <dd><%= league.account_id %></dd>
-
+          <dt>Team number</dt>
+          <dd><%= league.team_number %></dd>
         </dl>
         <div class="btn-group btn-group-justified">
           <a href="/leagues/<%= league.id %>" class="btn btn-primary">
@@ -53,7 +49,7 @@
       </div>
     </div>
   </div>
-<% end %>
+  <% end %>
 </div>
 
 <!-- You can ignore the following. It's a quick and dirty example of how to get a Pinterest-style layout with quick search. -->
