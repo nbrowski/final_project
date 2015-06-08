@@ -59,7 +59,6 @@ class AccountsController < ApplicationController
   end
 
 
-
   def edit
     @account = Account.find(params[:id])
   end

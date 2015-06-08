@@ -12,6 +12,7 @@ class SearchController < ApplicationController
  end
 
  def search
+
   #Create Array of Hashes to hold the results from each account
   @resultsAll=Array.new
 
@@ -31,7 +32,7 @@ class SearchController < ApplicationController
 
       if cookies=="" or cookies==nil then
         #for testing
-          #puts "***COOKIES ARE EMPTY***"
+          puts "***COOKIES ARE EMPTY***"
         @espnAgent.get("http://games.espn.go.com/ffl/signin")
         espnLogin=@espnAgent.page.forms.first
         espnLogin.username=account.user_name
@@ -105,19 +106,27 @@ class SearchController < ApplicationController
           resultsPlayers.push td.text
         end
 
-        #Put the availabilities into an array
+        #Put the availabilities and add/trade/drop links into an array
         resultsAvail=Array.new
+        resultsLinks=Array.new
         a=espnDoc.css("tr").select{|tr| tr[:class].to_s.include? "pncPlayerRow"} #this gets rows from espn results table
         #ideally do something like a.select{|a| a.css("td")[2].text} but it won't work in terminal.  Do loop instead. a[0].css("td")[2].text works
         i=0
         while i<a.count
+          #Owned by / Availability
           resultsAvail.push a[i].css("td")[2].text
+
+          #Link to Add/Trade/Drop player
+          linkpath=a[i].css("td")[3].css("a")[0].attributes["href"].value.split("'")[1]
+          linkurl="http://games.espn.go.com"+linkpath
+          resultsLinks.push linkurl
+
           i=i+1
         end
 
         #put all results into a hash to then push into the @resultsAll array
         resultsHash=Hash.new
-        resultsHash={:platform => league.account.platform, :leagueName => league.name, :resultsPlayers => resultsPlayers, :resultsAvail => resultsAvail, :n => resultsAvail.count}
+        resultsHash={:platform => league.account.platform, :leagueName => league.name, :resultsPlayers => resultsPlayers, :resultsAvail => resultsAvail, :resultsLinks => resultsLinks, :n => resultsAvail.count}
 
         @resultsAll.push resultsHash
 

@@ -21,8 +21,8 @@ puts @agent.cookies
 
 #MODIFY espnAuth Cookie Value to include quotations in hash
 
-@agent.cookies[2].value="{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}"
-@agent.cookies[3].value="{'swid':'{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}'}"
+@espnAgent.cookies[2].value="{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}"
+@espnAgent.cookies[3].value="{'swid':'{DD60E36C-BEA5-448F-A0E3-6CBEA5148FAF}'}"
 
 #Now go to the league page
 
@@ -30,7 +30,7 @@ league_page=@agent.page.links_with(href: /leagueId/).first.href
 
 #Look at link.  It should be "http://games.espn.go.com/ffl/clubhouse?leagueId=11584&teamId=2&seasonId=2015"
 
-#Note: be more efficient to go direct to player search page /ffl/freeagency?leagueId=11584&teamId=2&seasonId=2015
+#Note: be more efficient to go direct to player search page http://games.espn.go.com/ffl/freeagency?leagueId=11584&teamId=2&seasonId=2015
 
 puts league_page
 
