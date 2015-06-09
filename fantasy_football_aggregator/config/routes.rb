@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   get "/search", :controller => "search", :action => "index"
   get "/search/results", :controller => "search", :action => "search"
 
+  #Experiment with rendering the ESPN player add page within the app so as to make use of the sessions browser cookies and save the user from having to login if he hasn't done so already
+  get "search/addplayertest", :controller => "search", :action => "addPlayerTest"
+  post "search/rosterfix",  :controller => "search", :action => "rosterfixtest"
 
   # Routes for the Account resource:
   # CREATE

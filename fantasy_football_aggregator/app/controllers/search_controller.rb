@@ -30,9 +30,9 @@ class SearchController < ApplicationController
       #for testing
         #puts cookies
 
-      if cookies=="" or cookies==nil then
+        if cookies=="" or cookies==nil then
         #for testing
-          puts "***COOKIES ARE EMPTY***"
+        puts "***COOKIES ARE EMPTY***"
         @espnAgent.get("http://games.espn.go.com/ffl/signin")
         espnLogin=@espnAgent.page.forms.first
         espnLogin.username=account.user_name
@@ -78,7 +78,7 @@ class SearchController < ApplicationController
           #cookies = session[:login_cookies]
           #pp cookies
           @espnAgent.cookie_jar.load StringIO.new(cookies)
-      end
+        end
 
       #Player search for each league
       account.leagues.each do |league|
@@ -141,6 +141,22 @@ class SearchController < ApplicationController
   end
 
   render 'results'
+end
+
+def addPlayerTest
+  #This is a test for adding a player
+  cookies = session[:login_cookies]
+  @espnAgent=Mechanize.new
+  @espnAgent.cookie_jar.load StringIO.new(cookies)
+
+  @espnAgent.get("http://games.espn.go.com/ffl/freeagency?leagueId=11584&amp;incoming=1&amp;trans=2_8416_-1_1001_2_20")
+
+  @addPageHTML=Nokogiri::HTML(@espnAgent.page.body).to_html
+
+end
+
+def rosterfixtest
+
 end
 
 end
