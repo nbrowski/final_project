@@ -64,6 +64,7 @@ class AccountsController < ApplicationController
         @league.name=link.attributes[:title]
         @league.league_number=link.attributes[:href].split("=")[1].split("&")[0].to_i
         @league.team_number=link.attributes[:href].split("=")[2].split("&")[0].to_i
+        @league.teamname=page.links_with(class: "clubhouse-link", href: /#{link.attributes[:href].split("?")[1]}/)[0].text
         @league.account_id=@account.id
         @league.save
         # if @league.save

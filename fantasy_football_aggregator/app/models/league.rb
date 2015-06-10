@@ -4,6 +4,7 @@ class League < ActiveRecord::Base
   validates :league_number, :presence => true, :uniqueness => {:scope => :account}
   validates :name, :presence => true#, :uniqueness => {:scope => :league_number}
   validates :team_number, :presence => true
+  validates :teamname, :presence => true
 
   belongs_to :account
 

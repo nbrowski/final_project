@@ -27,6 +27,7 @@ class LeaguesController < ApplicationController
     @league.name = params[:name]
     @league.league_number = params[:league_number]
     @league.account_id = params[:account_id]
+    @league.teamname = params[:teamname]
 
     if @league.save
       redirect_to "/leagues", :notice => "League created successfully."
@@ -46,6 +47,7 @@ class LeaguesController < ApplicationController
     @league.name = params[:name]
     @league.league_number = params[:league_number]
     @league.account_id = params[:account_id]
+    @league.teamname = params[:teamname]
 
     if @league.save
       redirect_to "/leagues", :notice => "League updated successfully."
