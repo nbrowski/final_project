@@ -15,6 +15,9 @@ class SearchController < ApplicationController
 
   #Create Array of Hashes to hold the results from each account
   @resultsAll=Array.new
+  #*** Test new idea, see bottom
+  @resultsAll2=Array.new
+  #**** end
 
   current_user.accounts.each do |account|
     #Future versions: include logic for non-ESPN platforms.  Might need to use one agent for all platforms in order to be able to save the cookies across sessions.
@@ -107,31 +110,35 @@ class SearchController < ApplicationController
         end
 
         #Put the availabilities and add/trade/drop links into an array
-        resultsAvail=Array.new
-        resultsLinks=Array.new
-        resultsLinkActions=Array.new
         a=espnDoc.css("tr").select{|tr| tr[:class].to_s.include? "pncPlayerRow"} #this gets rows from espn results table
         #ideally do something like a.select{|a| a.css("td")[2].text} but it won't work in terminal.  Do loop instead. a[0].css("td")[2].text works
+        #*** Try this: each row from espn is a self-contained hash with platform and league name.  Total results is then array of these hashes.  The array can then be sorted on player name to arrange results output by player rather than by current league.
         i=0
         while i<a.count
           #Owned by / Availability
-          resultsAvail.push a[i].css("td")[2].text
+          resultAvail=a[i].css("td")[2].text
 
           #Link to Add/Trade/Drop player
           linkpath=a[i].css("td")[3].css("a")[0].attributes["href"].value.split("'")[1]
           linkurl="http://games.espn.go.com"+linkpath
-          resultsLinks.push linkurl
           linkAction=a[i].css("td")[3].css("a")[0].attributes["title"].value
-          resultsLinkActions.push linkAction
+
+
+          resultHash=Hash.new
+          resultHash={
+            :platform => league.account.platform,
+            :leagueName => league.name,
+            :resultPlayer => resultsPlayers[i],
+            :resultAvail => resultAvail,
+            :resultLink => linkurl,
+            :resultLinkAction => linkAction
+          }
+
+          @resultsAll.push resultHash
           i=i+1
         end
-
-        #put all results into a hash to then push into the @resultsAll array
-        resultsHash=Hash.new
-        resultsHash={:platform => league.account.platform, :leagueName => league.name, :resultsPlayers => resultsPlayers, :resultsAvail => resultsAvail, :resultsLinks => resultsLinks, :resultsLinkActions => resultsLinkActions, :n => resultsAvail.count}
-
-        @resultsAll.push resultsHash
-
+        #sort results by player name
+        @resultsAll.sort_by!{|hsh| hsh[:resultPlayer]}
       end
 
     end

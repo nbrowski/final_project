@@ -14,28 +14,24 @@
 <p></p>
 <p></p>
 
+
 <table class="table table-striped table-bordered table-condensed">
-  <tr>
-    <td class="h5">Platform   </td>
-    <td class="h5">League     </td>
-    <td class="h5">Player     </td>
-    <td class="h5">Owner      </td>
-    <td class="h5">Action      </td>
-
-  </tr>
-  <% @resultsAll.each do |league| %>
-  <% @i=0  %>
-  <% while @i<league[:n] %>
-  <tr>
-    <td><%= league[:platform] %>       </td>
-    <td><%= league[:leagueName] %>     </td>
-    <td><%= league[:resultsPlayers][@i] %>   </td>
-    <td><%= league[:resultsAvail][@i] %>  </td>
-    <td><a href="<%= league[:resultsLinks][@i] %>" target="_blank"><%= league[:resultsLinkActions][@i] %></a></td>
-
-  </tr>
-  <% @i=@i+1 %>
-  <% end %>
-  <% end %>
+  <tr class="info">
+   <td><strong>Player</strong>     </td>
+   <td><strong>League</strong>     </td>
+   <td><strong>Platform</strong>   </td>
+   <td><strong>Owner</strong>      </td>
+   <td><strong>Action</strong>     </td>
+ </tr>
+ <% @resultsAll.each do |result| %>
+ <tr>
+  <td><%= result[:resultPlayer] %>   </td>
+  <td><%= result[:leagueName] %>     </td>
+  <td><%= result[:platform] %>       </td>
+  <td><%= result[:resultAvail] %>  </td>
+  <td><a href="<%= result[:resultLink] %>" target="_blank"><%= result[:resultLinkAction] %></a></td>
+</tr>
+<% end %>
 </table>
+
 
