@@ -9,19 +9,19 @@
     <label for="lastNameInput">Last Name:</label>
     <input type="text" class="form-control" id="lastNameInput" name="lastNameInput" placeholder="Enter last name">
   </div>
-  <button type="submit" class="btn btn-default">Submit</button>
+  <button type="submit" class="btn btn-success">Submit</button>
 </form>
-<p></p>
-<p></p>
+
+<hr>
 
 
 <table class="table table-striped table-bordered table-condensed">
-  <tr class="info">
-   <td><strong>Player</strong>     </td>
-   <td><strong>League</strong>     </td>
-   <td><strong>Platform</strong>   </td>
-   <td><strong>Owner</strong>      </td>
-   <td><strong>Action</strong>     </td>
+  <tr style="color: white; background: #5cb85c;" >
+   <td>Player     </td>
+   <td>League     </td>
+   <td>Platform   </td>
+   <td>Owner      </td>
+   <td>Action     </td>
  </tr>
  <% @resultsAll.each do |result| %>
  <tr>
